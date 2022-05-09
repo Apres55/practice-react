@@ -1,4 +1,7 @@
-import { Line } from "./playerInfo.view";
+import { PlayerInfo } from "./playerInfo.view";
+import Input from "./common/imput";
+import {useState} from "react";
+import { getStats } from "./statsCalc/calc.function"
 
 export const PLAYERS = [{
     title: "Luka Doncic",
@@ -19,15 +22,54 @@ export const PLAYERS = [{
     assists: 4.4
 }];
 
-const PlayerInfo = () => {
+const KPI_NORM = 48;
+const KPI_POINTS = 29;
+const KPI_REBOUNTS = 10;
+const KPI_ASSISTS = 10;
+
+const Line = ({kpi, normKPI, minutes, label, point = 'KPI'}) => {
+    const percentage = +(kpi * minutes/ normKPI);
     return (
-        <div className="effective-line">
-            <Line percentage={0.1} type="bad"/>
-            <Line percentage={0.5} type="good"/>
-            <Line percentage={0.76} />
-            <div className="inner-line" style={{ width: "10%"}}></div>
-        </div>
+        <PlayerInfo.LineWrapper>
+                <PlayerInfo.Points.Wrapper>
+                    <PlayerInfo.Points.Title>
+                        {label}
+                    </PlayerInfo.Points.Title>
+                    <PlayerInfo.Points.Value>
+                        {kpi} {point}
+                    </PlayerInfo.Points.Value>
+                </PlayerInfo.Points.Wrapper>
+                <PlayerInfo.Line percentage={percentage} />
+                <PlayerInfo.Percentage>
+                    {percentage}%
+                </PlayerInfo.Percentage>
+            </PlayerInfo.LineWrapper>
     )
 }
 
-export default PlayerInfo
+const PlayerInfoController = ({points, rebounts, assists, title}) => {
+    const [minutes, setMinutes] = useState(48);
+    const kpi = getStats({points, rebounts, assists}) * minutes;
+    return (
+        <PlayerInfo.Wrapper>
+            <PlayerInfo.Title>
+                {title}
+            </PlayerInfo.Title>
+                <Input label={"Minutes"} 
+                    value={minutes} 
+                    points={'per game'} 
+                    onChange={(event => setMinutes(event.target.value))}
+                />
+                <PlayerInfo.Title>
+                    Average stats per match
+                </PlayerInfo.Title>
+                <Line label="Калории"
+                    kpi={kpi}
+                    normKPI={KPI_NORM}
+                    minutes={minutes}
+                />
+        </PlayerInfo.Wrapper>
+    )
+};
+
+export default PlayerInfoController;
