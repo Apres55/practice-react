@@ -108,15 +108,14 @@ export const PlayerInfo = {
         top: 0;
         left: 0;
         height: 100%;
-        width: ${(props) => 80 * (props.percentage / 100)}%;
+        width: ${(props) => 100 * (props.percentage / 100)}%;
         background-color: ${(props) => {
-            return (props.percentage < 100 &&
+            return (
                     props.percentage > 50) ? `#14de7e` : '#ff7676'
         }};
     }
     `,
     Percentage: styled.span`
-        width: 80px;
         font-size: 14px;
         font-weight: 600;
         line-height: 14px;

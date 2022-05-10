@@ -22,13 +22,13 @@ export const PLAYERS = [{
     assists: 4.4
 }];
 
-const KPI_NORM = 48;
-const KPI_POINTS = 29;
-const KPI_REBOUNTS = 10;
-const KPI_ASSISTS = 10;
+const KPI_NORM = 16;
+const KPI_POINTS = 25;
+const KPI_REBOUNTS = 6;
+const KPI_ASSISTS = 6;
 
-const Line = ({kpi, normKPI, minutes, label, point = 'KPI'}) => {
-    const percentage = +(kpi * minutes/ normKPI);
+const Line = ({kpi, normKPI, minutes, label, point = ''}) => {
+    const percentage = +(kpi * minutes/ normKPI).toFixed(0) ;
     return (
         <PlayerInfo.LineWrapper>
                 <PlayerInfo.Points.Wrapper>
@@ -49,7 +49,7 @@ const Line = ({kpi, normKPI, minutes, label, point = 'KPI'}) => {
 
 const PlayerInfoController = ({points, rebounts, assists, title}) => {
     const [minutes, setMinutes] = useState(48);
-    const kpi = getStats({points, rebounts, assists}) * minutes;
+    const kpi = getStats({points, rebounts, assists})/100 * minutes;
     return (
         <PlayerInfo.Wrapper>
             <PlayerInfo.Title>
@@ -63,9 +63,24 @@ const PlayerInfoController = ({points, rebounts, assists, title}) => {
                 <PlayerInfo.Title>
                     Average stats per match
                 </PlayerInfo.Title>
-                <Line label="Калории"
-                    kpi={kpi}
+                <Line label="Effective Rating"
+                    kpi={kpi.toFixed(2)}
                     normKPI={KPI_NORM}
+                    minutes={minutes}
+                />
+                <Line label="Points"
+                    kpi={points.toFixed(2)}
+                    normKPI={KPI_POINTS}
+                    minutes={minutes}
+                />
+                <Line label="Rebounts"
+                    kpi={rebounts.toFixed(2)}
+                    normKPI={KPI_REBOUNTS}
+                    minutes={minutes}
+                />
+                <Line label="Assists"
+                    kpi={assists.toFixed(2)}
+                    normKPI={KPI_ASSISTS}
                     minutes={minutes}
                 />
         </PlayerInfo.Wrapper>
